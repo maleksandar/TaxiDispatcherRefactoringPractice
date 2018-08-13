@@ -1,5 +1,7 @@
 
-.idea/
+# All hidden files
+.*
+!/.gitignore
 
 # Build results
 [Dd]ebug/
