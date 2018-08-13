@@ -1,4 +1,6 @@
-﻿namespace TaxiDispatcher.App
+﻿using System;
+
+namespace TaxiDispatcher.App
 {
     public class Taxi
     {
@@ -6,5 +8,10 @@
         public string Name { get; set; }
         public TaxiCompany TaxiCompany { get; set; }
         public int Location { get; set; }
+
+        public int DistanceFrom(int location)
+        {
+            return Math.Abs(Location - location);
+        }
     }
 }

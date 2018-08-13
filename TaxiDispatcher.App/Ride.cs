@@ -14,7 +14,6 @@ namespace TaxiDispatcher.App
             Taxi = taxi;
         }
 
-        public int Id { get; set; }
         public int ToLocation { get; }
 
         private int FromLocation { get;  }
