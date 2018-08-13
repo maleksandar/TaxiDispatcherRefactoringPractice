@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TaxiDispatcher.App;
 
 namespace TaxiDispatcher.Client
@@ -9,76 +10,34 @@ namespace TaxiDispatcher.Client
         {
             Scheduler scheduler = new Scheduler();
 
-            try
+            var requests = new List<RideRequest>
             {
-                Console.WriteLine("Ordering ride from 5 to 0...");
-                Scheduler.Ride ride = scheduler.OrderRide(new RideRequest { FromLocation = 5, ToLocation = 0, Area = Constants.City, Time = new DateTime(2018, 1, 1, 23, 0, 0) } );
-                scheduler.AcceptRide(ride);
-                Console.WriteLine("");
-            }
-            catch (Exception e)
+                new RideRequest { FromLocation = 5, ToLocation = 0, Area = Area.City, Time = new DateTime(2018, 1, 1, 23, 0, 0) },
+                new RideRequest { FromLocation = 0, ToLocation = 12, Area = Area.InterCity, Time = new DateTime(2018, 1, 1, 9, 0, 0) },
+                new RideRequest { FromLocation = 5, ToLocation = 0, Area = Area.City, Time = new DateTime(2018, 1, 1, 11, 0, 0)},
+                new RideRequest { FromLocation = 35, ToLocation = 12, Area = Area.City, Time = new DateTime(2018, 1, 1, 11, 0, 0)}
+            };
+
+            foreach (var request in requests)
             {
-                if (e.Message == "There are no available taxi vehicles!")
+                try
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine($"Ordering ride from {request.FromLocation} to {request.ToLocation}...");
+                    Scheduler.Ride ride = scheduler.OrderRide(request);
+                    scheduler.AcceptRide(ride);
                     Console.WriteLine("");
                 }
-                else
-                    throw;
-            }
-
-            try
-            {
-                Console.WriteLine("Ordering ride from 0 to 12...");
-                Scheduler.Ride ride = scheduler.OrderRide(new RideRequest { FromLocation = 0, ToLocation = 12, Area = Constants.InterCity, Time = new DateTime(2018, 1, 1, 9, 0, 0) });
-                scheduler.AcceptRide(ride);
-                Console.WriteLine("");
-            }
-            catch (Exception e)
-            {
-                if (e.Message == "There are no available taxi vehicles!")
+                catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine("");
+                    if (e.Message == "There are no available taxi vehicles!")
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine("");
+                    }
+                    else
+                        throw;
                 }
-                else
-                    throw;
-            }
-
-            try
-            {
-                Console.WriteLine("Ordering ride from 5 to 0...");
-                Scheduler.Ride ride = scheduler.OrderRide(new RideRequest { FromLocation = 5, ToLocation = 0, Area = Constants.City, Time = new DateTime(2018, 1, 1, 11, 0, 0)});
-                scheduler.AcceptRide(ride);
-                Console.WriteLine("");
-            }
-            catch (Exception e)
-            {
-                if (e.Message == "There are no available taxi vehicles!")
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine("");
-                }
-                else
-                    throw;
-            }
-
-            try
-            {
-                Console.WriteLine("Ordering ride from 35 to 12...");
-                Scheduler.Ride ride = scheduler.OrderRide(new RideRequest { FromLocation = 35, ToLocation = 12, Area = Constants.City, Time = new DateTime(2018, 1, 1, 11, 0, 0)});
-                scheduler.AcceptRide(ride);
-                Console.WriteLine("");
-            }
-            catch (Exception e)
-            {
-                if (e.Message == "There are no available taxi vehicles!")
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine("");
-                }  
-                else
-                    throw;
+                
             }
 
             Console.WriteLine("Driver with ID = 2 earned today:");

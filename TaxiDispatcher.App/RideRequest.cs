@@ -8,7 +8,7 @@ namespace TaxiDispatcher.App
 
         public int ToLocation { get; set; }
 
-        public int Area { get; set; }
+        public Area Area { get; set; }
 
         public DateTime Time { get; set; }
     }
