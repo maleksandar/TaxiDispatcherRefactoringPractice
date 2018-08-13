@@ -1,0 +1,8 @@
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/obj/Debug/.NETFramework,Version=v4.6.AssemblyAttribute.cs
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/bin/Debug/TaxiDispatcher.Client.exe.config
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/bin/Debug/TaxiDispatcher.Client.exe.mdb
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/bin/Debug/TaxiDispatcher.Client.exe
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/obj/Debug/TaxiDispatcher.Client.exe
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/obj/Debug/TaxiDispatcher.Client.exe.mdb
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/bin/Debug/TaxiDispatcher.App.dll
+/home/aleksandar/Downloads/TaxiDispatcher/TaxiDispatcher.Client/bin/Debug/TaxiDispatcher.App.dll.mdb
