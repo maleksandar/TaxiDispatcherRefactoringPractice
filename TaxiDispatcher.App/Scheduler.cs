@@ -1,152 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TaxiDispatcher.App
 {
-    public class Scheduler
+    public static class Scheduler
     {
-        protected Taxi taxi1 = new Taxi { Taxi_driver_id = 1, Taxi_driver_name = "Predrag", Taxi_company = "Naxi", Location = 1};
-        protected Taxi taxi2 = new Taxi { Taxi_driver_id = 2, Taxi_driver_name = "Nenad", Taxi_company = "Naxi", Location = 4 };
-        protected Taxi taxi3 = new Taxi { Taxi_driver_id = 3, Taxi_driver_name = "Dragan", Taxi_company = "Alfa", Location = 6 };
-        protected Taxi taxi4 = new Taxi { Taxi_driver_id = 4, Taxi_driver_name = "Goran", Taxi_company = "Gold", Location = 7 };
-        public Ride OrderRide(RideRequest rideRequest)
+        private static TaxiCompany naxi = new TaxiCompany {Name = "Naxi", Price = 10};
+        private static TaxiCompany alfa = new TaxiCompany {Name = "Alfa", Price = 15};
+        private static TaxiCompany gold = new TaxiCompany {Name = "Gold", Price = 13};
+
+        private static Taxi taxi1 = new Taxi { Id = 1, Name = "Predrag", TaxiCompany = naxi, Location = 1};
+        private static Taxi taxi2 = new Taxi { Id = 2, Name = "Nenad", TaxiCompany = naxi, Location = 4 };
+        private static Taxi taxi3 = new Taxi { Id = 3, Name = "Dragan", TaxiCompany = alfa, Location = 6 };
+        private static Taxi taxi4 = new Taxi { Id = 4, Name = "Goran", TaxiCompany = gold, Location = 7 };
+
+        private static List<Taxi> availableTaxis = new List<Taxi> {taxi1, taxi2, taxi3, taxi4};
+
+        public static Ride OrderRide(RideRequest rideRequest)
         {
-            #region FindingTheBestVehicle 
+            var minimalDistance = availableTaxis.Min(x => Math.Abs(x.Location - rideRequest.FromLocation));
+            var bestVehicle = availableTaxis.Find(taxi => Math.Abs(taxi.Location - rideRequest.FromLocation) == minimalDistance);
 
-            Taxi min_taxi = taxi1;
-            int min_distance = Math.Abs(taxi1.Location - rideRequest.FromLocation);
-
-            if (Math.Abs(taxi2.Location - rideRequest.FromLocation) < min_distance)
+            if (minimalDistance > 15)
             {
-                min_taxi = taxi2;
-                min_distance = Math.Abs(taxi2.Location - rideRequest.FromLocation);
-            }
-
-            if (Math.Abs(taxi3.Location - rideRequest.FromLocation) < min_distance)
-            {
-                min_taxi = taxi3;
-                min_distance = Math.Abs(taxi3.Location - rideRequest.FromLocation);
-            }
-
-            if (Math.Abs(taxi4.Location - rideRequest.FromLocation) < min_distance)
-            {
-                min_taxi = taxi4;
-                min_distance = Math.Abs(taxi4.Location - rideRequest.FromLocation);
-            }
-
-            if (min_distance > 15)
                 throw new Exception("There are no available taxi vehicles!");
+            }
 
-            #endregion
-
-            #region CreatingRide
 
             Ride ride = new Ride();
-            ride.Taxi_driver_id = min_taxi.Taxi_driver_id;
-            ride.Location_from = rideRequest.FromLocation;
-            ride.Location_to = rideRequest.ToLocation;
-            ride.Taxi_driver_name = min_taxi.Taxi_driver_name;
-
-            #endregion
-
-            #region CalculatingPrice
-
-            switch (min_taxi.Taxi_company)
-            {
-                case "Naxi":
-                {
-                    ride.Price = 10 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
-                    break;
-                }
-                case "Alfa":
-                {
-                    ride.Price = 15 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
-                    break;
-                }
-                case "Gold":
-                {
-                    ride.Price = 13 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
-                    break;
-                }
-                default:
-                {
-                    throw new Exception("Ilegal company");
-                }
-            }
-
-            if (rideRequest.Area == Constants.InterCity)
-            {
-                ride.Price *= 2;
-            }
-
-            if (rideRequest.Time.Hour < 6 || rideRequest.Time.Hour > 22)
-            {
-                ride.Price *= 2;
-            }
-
-            #endregion
-
-            Console.WriteLine("Ride ordered, price: " + ride.Price.ToString());
+            ride.Taxi = bestVehicle;
+            ride.RideRequest = rideRequest;
+            
+            Console.WriteLine($"Ride ordered, price: {ride.Price}");
             return ride;
         }
 
-        public void AcceptRide(Ride ride)
+        public static void AcceptRide(Ride ride)
         {
             InMemoryRideDataBase.SaveRide(ride);
 
-            if (taxi1.Taxi_driver_id == ride.Taxi_driver_id)
-            {
-                taxi1.Location = ride.Location_to;
-            }
-
-            if (taxi2.Taxi_driver_id == ride.Taxi_driver_id)
-            {
-                taxi2.Location = ride.Location_to;
-            }
-
-            if (taxi3.Taxi_driver_id == ride.Taxi_driver_id)
-            {
-                taxi3.Location = ride.Location_to;
-            }
-
-            if (taxi4.Taxi_driver_id == ride.Taxi_driver_id)
-            {
-                taxi4.Location = ride.Location_to;
-            }
-
-            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi_driver_name);
+            var acceptedTaxi = availableTaxis.Find(taxi => taxi.Id == ride.Taxi.Id);
+            acceptedTaxi.Location = ride.RideRequest.ToLocation;
+            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.Name);
         }
 
-        public List<Ride> GetRideList(int driver_id)
+        public static List<Ride> GetRideList(int driver_id)
         {
             List<Ride> rides = new List<Ride>();
             List<int> ids = InMemoryRideDataBase.GetRide_Ids();
             foreach (int id in ids)
             {
                 Ride ride = InMemoryRideDataBase.GetRide(id);
-                if (ride.Taxi_driver_id == driver_id)
+                if (ride.Taxi.Id == driver_id)
                     rides.Add(ride);
             }
 
             return rides;
-        }
-
-        public class Taxi
-        {
-            public int Taxi_driver_id { get; set; }
-            public string Taxi_driver_name { get; set; }
-            public string Taxi_company { get; set; }
-            public int Location { get; set; }
-        }
-
-        public class Ride
-        {
-            public int Ride_id { get; set; }
-            public int Location_from { get; set; }
-            public int Location_to { get; set; }
-            public int Taxi_driver_id { get; set; }
-            public string Taxi_driver_name { get; set; }
-            public int Price { get; set; }
         }
     }
 }
