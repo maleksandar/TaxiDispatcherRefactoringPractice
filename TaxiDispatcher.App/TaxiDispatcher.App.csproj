@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Area.cs" />
     <Compile Include="InMemoryRideDataBase.cs" />
+    <Compile Include="NoAvailableVehiclesException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ride.cs" />
     <Compile Include="RideRequest.cs" />

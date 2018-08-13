@@ -21,8 +21,7 @@ namespace TaxiDispatcher.Client
                 try
                 {
                     Console.WriteLine($"Ordering ride from {request.FromLocation} to {request.ToLocation}...");
-                    Ride ride = Scheduler.OrderRide(request);
-                    Scheduler.AcceptRide(ride);
+                    Scheduler.OrderRide(request);
                     Console.WriteLine("");
                 }
                 catch (Exception e)
@@ -38,16 +37,7 @@ namespace TaxiDispatcher.Client
                 
             }
 
-            Console.WriteLine("Driver with ID = 2 earned today:");
-            int total = 0;
-            foreach (Ride r in Scheduler.GetRideList(2))
-            {
-                total += r.Price;
-                Console.WriteLine("Price: " + r.Price);
-            }
-            Console.WriteLine("Total: " + total);
-
-            Console.ReadLine();
+            Scheduler.PrintStatsForDriver(2);
         }
     }
 }

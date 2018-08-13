@@ -8,13 +8,13 @@ namespace TaxiDispatcher.App
     {
         private const int AcceptableDistance = 15;
 
-        public static Ride OrderRide(RideRequest rideRequest)
+        public static void OrderRide(RideRequest rideRequest)
         {
             var closestVechicle = ClosestVechicle(rideRequest);
             var ride = new Ride(rideRequest, closestVechicle);
-            
             Console.WriteLine($"Ride ordered, price: {ride.Price}");
-            return ride;
+            
+            AcceptRide(ride);
         }
 
         private static Taxi ClosestVechicle(RideRequest rideRequest)
@@ -28,7 +28,7 @@ namespace TaxiDispatcher.App
             return TaxiRegister.AvailableTaxis.Find(taxi => Math.Abs(taxi.Location - rideRequest.FromLocation) == minimalDistance);
         }
 
-        public static void AcceptRide(Ride ride)
+        private static void AcceptRide(Ride ride)
         {
             InMemoryRideDataBase.SaveRide(ride);
 
@@ -37,18 +37,23 @@ namespace TaxiDispatcher.App
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.Name);
         }
 
-        public static IEnumerable<Ride> GetRideList(int driver_id)
+        public static IEnumerable<Ride> GetRideList(int driveriId)
         {
-            var rides = new List<Ride>();
-            var ids = InMemoryRideDataBase.GetRide_Ids();
-            foreach (var id in ids)
-            {
-                var ride = InMemoryRideDataBase.GetRide(id);
-                if (ride.Taxi.Id == driver_id)
-                    rides.Add(ride);
-            }
+            return InMemoryRideDataBase.Rides.Where(ride => ride.Taxi.Id == driveriId);
+        }
 
-            return rides;
+        public static void PrintStatsForDriver(int driverId)
+        {
+            Console.WriteLine($"Driver with ID = {driverId} earned today:");
+            var total = 0;
+            foreach (var r in GetRideList(driverId))
+            {
+                total += r.Price;
+                Console.WriteLine("Price: " + r.Price);
+            }
+            Console.WriteLine("Total: " + total);
+
+            Console.ReadLine();
         }
     }
 }
