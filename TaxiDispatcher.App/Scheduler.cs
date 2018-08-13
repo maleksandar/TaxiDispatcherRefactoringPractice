@@ -9,29 +9,29 @@ namespace TaxiDispatcher.App
         protected Taxi taxi2 = new Taxi { Taxi_driver_id = 2, Taxi_driver_name = "Nenad", Taxi_company = "Naxi", Location = 4 };
         protected Taxi taxi3 = new Taxi { Taxi_driver_id = 3, Taxi_driver_name = "Dragan", Taxi_company = "Alfa", Location = 6 };
         protected Taxi taxi4 = new Taxi { Taxi_driver_id = 4, Taxi_driver_name = "Goran", Taxi_company = "Gold", Location = 7 };
-        public Ride OrderRide(int location_from, int location_to, int ride_type, DateTime time)
+        public Ride OrderRide(RideRequest rideRequest)
         {
             #region FindingTheBestVehicle 
 
             Taxi min_taxi = taxi1;
-            int min_distance = Math.Abs(taxi1.Location - location_from);
+            int min_distance = Math.Abs(taxi1.Location - rideRequest.FromLocation);
 
-            if (Math.Abs(taxi2.Location - location_from) < min_distance)
+            if (Math.Abs(taxi2.Location - rideRequest.FromLocation) < min_distance)
             {
                 min_taxi = taxi2;
-                min_distance = Math.Abs(taxi2.Location - location_from);
+                min_distance = Math.Abs(taxi2.Location - rideRequest.FromLocation);
             }
 
-            if (Math.Abs(taxi3.Location - location_from) < min_distance)
+            if (Math.Abs(taxi3.Location - rideRequest.FromLocation) < min_distance)
             {
                 min_taxi = taxi3;
-                min_distance = Math.Abs(taxi3.Location - location_from);
+                min_distance = Math.Abs(taxi3.Location - rideRequest.FromLocation);
             }
 
-            if (Math.Abs(taxi4.Location - location_from) < min_distance)
+            if (Math.Abs(taxi4.Location - rideRequest.FromLocation) < min_distance)
             {
                 min_taxi = taxi4;
-                min_distance = Math.Abs(taxi4.Location - location_from);
+                min_distance = Math.Abs(taxi4.Location - rideRequest.FromLocation);
             }
 
             if (min_distance > 15)
@@ -43,8 +43,8 @@ namespace TaxiDispatcher.App
 
             Ride ride = new Ride();
             ride.Taxi_driver_id = min_taxi.Taxi_driver_id;
-            ride.Location_from = location_from;
-            ride.Location_to = location_to;
+            ride.Location_from = rideRequest.FromLocation;
+            ride.Location_to = rideRequest.ToLocation;
             ride.Taxi_driver_name = min_taxi.Taxi_driver_name;
 
             #endregion
@@ -55,17 +55,17 @@ namespace TaxiDispatcher.App
             {
                 case "Naxi":
                 {
-                    ride.Price = 10 * Math.Abs(location_from - location_to);
+                    ride.Price = 10 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
                     break;
                 }
                 case "Alfa":
                 {
-                    ride.Price = 15 * Math.Abs(location_from - location_to);
+                    ride.Price = 15 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
                     break;
                 }
                 case "Gold":
                 {
-                    ride.Price = 13 * Math.Abs(location_from - location_to);
+                    ride.Price = 13 * Math.Abs(rideRequest.FromLocation - rideRequest.ToLocation);
                     break;
                 }
                 default:
@@ -74,12 +74,12 @@ namespace TaxiDispatcher.App
                 }
             }
 
-            if (ride_type == Constants.InterCity)
+            if (rideRequest.Area == Constants.InterCity)
             {
                 ride.Price *= 2;
             }
 
-            if (time.Hour < 6 || time.Hour > 22)
+            if (rideRequest.Time.Hour < 6 || rideRequest.Time.Hour > 22)
             {
                 ride.Price *= 2;
             }
