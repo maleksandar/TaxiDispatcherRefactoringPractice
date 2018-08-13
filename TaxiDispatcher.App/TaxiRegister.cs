@@ -4,7 +4,7 @@ namespace TaxiDispatcher.App
 {
     public static class TaxiRegister
     {
-        public static readonly List<Taxi> AvailableTaxis = new List<Taxi>
+        public static readonly IEnumerable<Taxi> AvailableTaxis = new[]
         {
             new Taxi {Id = 1, Name = "Predrag", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 1},
             new Taxi {Id = 2, Name = "Nenad", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 4},

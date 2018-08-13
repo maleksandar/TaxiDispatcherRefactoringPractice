@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace TaxiDispatcher.App
@@ -37,14 +36,14 @@ namespace TaxiDispatcher.App
                 throw new NoAvailableVehiclesException("There are no available taxi vehicles!");
             }
 
-            return TaxiRegister.AvailableTaxis.Find(taxi => taxi.DistanceFrom(rideRequest.FromLocation) == minimalDistance);
+            return TaxiRegister.AvailableTaxis.First(taxi => taxi.DistanceFrom(rideRequest.FromLocation) == minimalDistance);
         }
 
         private static void AcceptRide(Ride ride)
         {
             InMemoryRideDataBase.SaveRide(ride);
 
-            var acceptedTaxi = TaxiRegister.AvailableTaxis.Find(taxi => taxi.Id == ride.Taxi.Id);
+            var acceptedTaxi = TaxiRegister.AvailableTaxis.First(taxi => taxi.Id == ride.Taxi.Id);
             acceptedTaxi.Location = ride.ToLocation;
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.Name);
         }

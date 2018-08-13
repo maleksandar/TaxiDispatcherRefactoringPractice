@@ -7,7 +7,7 @@ namespace TaxiDispatcher.Client
     internal static class Program
     {
         
-        private static readonly IEnumerable<RideRequest> RideRequests = new List<RideRequest>
+        private static readonly IEnumerable<RideRequest> RideRequests = new[]
         {
             new RideRequest { FromLocation = 5, ToLocation = 0, Area = Area.City, Time = new DateTime(2018, 1, 1, 23, 0, 0) },
             new RideRequest { FromLocation = 0, ToLocation = 12, Area = Area.InterCity, Time = new DateTime(2018, 1, 1, 9, 0, 0) },
