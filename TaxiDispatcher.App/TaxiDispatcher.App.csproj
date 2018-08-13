@@ -48,6 +48,8 @@
     <Compile Include="Scheduler.cs" />
     <Compile Include="Taxi.cs" />
     <Compile Include="TaxiCompany.cs" />
+    <Compile Include="TaxiCompanyRegister.cs" />
+    <Compile Include="TaxiRegister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

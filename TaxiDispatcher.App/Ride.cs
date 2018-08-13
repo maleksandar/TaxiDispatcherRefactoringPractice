@@ -4,20 +4,31 @@ namespace TaxiDispatcher.App
 {
     public class Ride
     {
-        public int Id { get; set; }
-        public RideRequest RideRequest { get; set; }
-        public int FromLocation => RideRequest.FromLocation;
-        public int ToLocation => RideRequest.ToLocation;
+        public Ride(RideRequest rideRequest, Taxi taxi)
+        {
+            FromLocation = rideRequest.FromLocation;
+            ToLocation = rideRequest.ToLocation;
+            Area = rideRequest.Area;
+            OrderTime = rideRequest.Time;
 
-        public Taxi Taxi { get; set; }
+            Taxi = taxi;
+        }
+
+        public int Id { get; set; }
+        public int ToLocation { get; }
+
+        private int FromLocation { get;  }
+        private Area Area { get; }
+        private DateTime OrderTime { get; }
+        public Taxi Taxi { get; }
 
         public int Price
         {
             get
             {
-                var basePrice = Taxi.TaxiCompany.Price * Math.Abs(RideRequest.FromLocation - RideRequest.ToLocation);
-                var areaBonus = RideRequest.Area == Area.InterCity ? 2 : 1;
-                var timeOfDayBonus = (RideRequest.Time.Hour < 6 || RideRequest.Time.Hour > 22) ? 2 : 1;
+                var basePrice = Taxi.TaxiCompany.Price * Math.Abs(FromLocation - ToLocation);
+                var areaBonus = Area == Area.InterCity ? 2 : 1;
+                var timeOfDayBonus = (OrderTime.Hour < 6 || OrderTime.Hour > 22) ? 2 : 1;
                 return basePrice * areaBonus * timeOfDayBonus;
             }
         }

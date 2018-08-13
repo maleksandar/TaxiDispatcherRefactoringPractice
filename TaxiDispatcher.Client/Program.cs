@@ -4,9 +4,9 @@ using TaxiDispatcher.App;
 
 namespace TaxiDispatcher.Client
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var requests = new List<RideRequest>
             {
