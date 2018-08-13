@@ -2,6 +2,7 @@
 # All hidden files
 .*
 !/.gitignore
+.idea/.idea.TaxiDispatcher/.idea/workspace.xml
 
 # Build results
 [Dd]ebug/
