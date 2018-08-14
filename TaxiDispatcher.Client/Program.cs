@@ -6,7 +6,6 @@ namespace TaxiDispatcher.Client
 {
     internal static class Program
     {
-        
         private static readonly IEnumerable<RideRequest> RideRequests = new[]
         {
             new RideRequest (5, 0, Area.City, new DateTime(2018, 1, 1, 23, 0, 0)),
@@ -17,7 +16,8 @@ namespace TaxiDispatcher.Client
 
         private static void Main()
         {
-            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository());
+            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository(), Console.WriteLine);
+
             foreach (var request in RideRequests)
             {
                 try
