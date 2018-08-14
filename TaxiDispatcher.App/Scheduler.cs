@@ -3,11 +3,20 @@ using System.Linq;
 
 namespace TaxiDispatcher.App
 {
-    public static class Scheduler
+    public class Scheduler
     {
         private const int AcceptableDistance = 15;
 
-        public static void OrderRide(RideRequest rideRequest)
+        private readonly IRideRepository _rideRepository;
+        private readonly ITaxiRepository _taxiRepository;
+
+        public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository)
+        {
+            _rideRepository = rideRepository;
+            _taxiRepository = taxiRepository;
+        }
+
+        public void OrderRide(RideRequest rideRequest)
         {
             var closestVechicle = ClosestVechicle(rideRequest);
             var ride = new Ride(rideRequest, closestVechicle);
@@ -16,11 +25,11 @@ namespace TaxiDispatcher.App
             AcceptRide(ride);
         }
         
-        public static void PrintStatsForDriver(int driverId)
+        public void PrintStatsForDriver(int driverId)
         {
             Console.WriteLine($"Driver with ID = {driverId} earned today:");
             var total = 0;
-            foreach (var ride in InMemoryRideDataBase.GetDriversRidingList(driverId))
+            foreach (var ride in _rideRepository.GetDriversRidingList(driverId))
             {
                 total += ride.Price;
                 Console.WriteLine("Price: " + ride.Price);
@@ -28,23 +37,18 @@ namespace TaxiDispatcher.App
             Console.WriteLine("Total: " + total);
         }
 
-        private static Taxi ClosestVechicle(RideRequest rideRequest)
+        private Taxi ClosestVechicle(RideRequest rideRequest)
         {
-            var minimalDistance = TaxiRegister.AvailableTaxis.Min(taxi => Math.Abs(taxi.Location - rideRequest.FromLocation));
-            if (minimalDistance > AcceptableDistance)
-            {
-                throw new NoAvailableVehiclesException("There are no available taxi vehicles!");
-            }
-
-            return TaxiRegister.AvailableTaxis.First(taxi => taxi.DistanceFrom(rideRequest.FromLocation) == minimalDistance);
+            return _taxiRepository.ClosestToLocation(rideRequest.FromLocation, AcceptableDistance);
         }
 
-        private static void AcceptRide(Ride ride)
+        private void AcceptRide(Ride ride)
         {
-            InMemoryRideDataBase.SaveRide(ride);
+            _rideRepository.SaveRide(ride);
 
-            var acceptedTaxi = TaxiRegister.AvailableTaxis.First(taxi => taxi.Id == ride.Taxi.Id);
+            var acceptedTaxi = _taxiRepository.GetById(ride.Taxi.Id);
             acceptedTaxi.Location = ride.ToLocation;
+            
             Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.Name);
         }
     }

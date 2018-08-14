@@ -3,16 +3,16 @@ using System.Linq;
 
 namespace TaxiDispatcher.App
 {
-    public static class InMemoryRideDataBase
+    public class InMemoryRideDataBase : IRideRepository
     {
         private static readonly List<Ride> Rides = new List<Ride>();
 
-        public static void SaveRide(Ride ride)
+        public void SaveRide(Ride ride)
         {
             Rides.Add(ride);
         }
 
-        public static IEnumerable<Ride> GetDriversRidingList(int driveriId)
+        public IEnumerable<Ride> GetDriversRidingList(int driveriId)
         {
             return Rides.Where(ride => ride.Taxi.Id == driveriId);
         }

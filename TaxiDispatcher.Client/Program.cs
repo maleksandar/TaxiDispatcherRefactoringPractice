@@ -18,23 +18,23 @@ namespace TaxiDispatcher.Client
         private static void Main(string[] args)
         {
 
+            var scheduler = new Scheduler(new InMemoryRideDataBase(), new TaxiRegister());
             foreach (var request in RideRequests)
             {
                 try
                 {
                     Console.WriteLine($"Ordering ride from {request.FromLocation} to {request.ToLocation}...");
-                    Scheduler.OrderRide(request);
+                    scheduler.OrderRide(request);
                     Console.WriteLine("");
                 }
                 catch (NoAvailableVehiclesException e)
                 {
                     Console.WriteLine(e.Message);
                     Console.WriteLine("");
-
                 }
             }
 
-            Scheduler.PrintStatsForDriver(2);
+            scheduler.PrintStatsForDriver(2);
             Console.ReadLine();
         }
     }
