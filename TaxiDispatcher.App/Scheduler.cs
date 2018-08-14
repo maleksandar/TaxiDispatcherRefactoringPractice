@@ -14,13 +14,9 @@ namespace TaxiDispatcher.App
 
         public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, Logger loger)
         {
-            if (rideRepository == null) throw new ArgumentNullException(nameof(rideRepository));
-            if (taxiRepository == null) throw new ArgumentNullException(nameof(taxiRepository));
-            if (loger == null) throw new ArgumentNullException(nameof(loger));
-
-            _rideRepository = rideRepository;
-            _taxiRepository = taxiRepository;
-            _log = loger;
+            _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
+            _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
+            _log = loger ?? throw new ArgumentNullException(nameof(loger));
         }
 
         public void OrderRide(RideRequest rideRequest)

@@ -9,11 +9,8 @@ namespace TaxiDispatcher.App
 
         public Ride(RideRequest rideRequest, Taxi taxi)
         {
-            if (rideRequest == null) throw new ArgumentNullException(nameof(rideRequest));
-            if (taxi == null) throw new ArgumentNullException(nameof(taxi));
-
-            RideRequest = rideRequest;
-            Taxi = taxi;
+            RideRequest = rideRequest ?? throw new ArgumentNullException(nameof(rideRequest));
+            Taxi = taxi ?? throw new ArgumentNullException(nameof(taxi));
         }
 
         public RideRequest RideRequest { get; }
