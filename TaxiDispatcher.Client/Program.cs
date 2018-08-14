@@ -9,25 +9,22 @@ namespace TaxiDispatcher.Client
         
         private static readonly IEnumerable<RideRequest> RideRequests = new[]
         {
-            new RideRequest { FromLocation = 5, ToLocation = 0, Area = Area.City, Time = new DateTime(2018, 1, 1, 23, 0, 0) },
-            new RideRequest { FromLocation = 0, ToLocation = 12, Area = Area.InterCity, Time = new DateTime(2018, 1, 1, 9, 0, 0) },
-            new RideRequest { FromLocation = 5, ToLocation = 0, Area = Area.City, Time = new DateTime(2018, 1, 1, 11, 0, 0) },
-            new RideRequest { FromLocation = 35, ToLocation = 12, Area = Area.City, Time = new DateTime(2018, 1, 1, 11, 0, 0) }
+            new RideRequest (5, 0, Area.City, new DateTime(2018, 1, 1, 23, 0, 0)),
+            new RideRequest (0, 12, Area.InterCity, new DateTime(2018, 1, 1, 9, 0, 0)),
+            new RideRequest (5, 0, Area.City, new DateTime(2018, 1, 1, 11, 0, 0)),
+            new RideRequest (35, 12, Area.City, new DateTime(2018, 1, 1, 11, 0, 0))
         };
-        
-        private static void Main(string[] args)
-        {
 
-            var scheduler = new Scheduler(new InMemoryRideDataBase(), new TaxiRegister());
+        private static void Main()
+        {
+            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository());
             foreach (var request in RideRequests)
             {
                 try
                 {
-                    Console.WriteLine($"Ordering ride from {request.FromLocation} to {request.ToLocation}...");
                     scheduler.OrderRide(request);
-                    Console.WriteLine("");
                 }
-                catch (NoAvailableVehiclesException e)
+                catch (NoAvailableVehicleException e)
                 {
                     Console.WriteLine(e.Message);
                     Console.WriteLine("");

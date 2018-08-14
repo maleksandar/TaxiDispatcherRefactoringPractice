@@ -2,7 +2,8 @@
 {
     public interface ITaxiRepository
     {
-        Taxi ClosestToLocation(int location, int acceptableDistance);
+        Taxi VechicleClosestTo(int location, int acceptableDistance);
+     
         Taxi GetById(int id);
     }
 }

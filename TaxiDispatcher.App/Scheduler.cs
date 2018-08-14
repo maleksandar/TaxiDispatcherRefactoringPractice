@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace TaxiDispatcher.App
 {
@@ -12,14 +11,22 @@ namespace TaxiDispatcher.App
 
         public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository)
         {
+            if (rideRepository == null) throw new ArgumentNullException(nameof(rideRepository));
+            if (taxiRepository == null) throw new ArgumentNullException(nameof(taxiRepository));
+
             _rideRepository = rideRepository;
             _taxiRepository = taxiRepository;
         }
 
         public void OrderRide(RideRequest rideRequest)
         {
-            var closestVechicle = ClosestVechicle(rideRequest);
+            Console.WriteLine($"Ordering ride from {rideRequest.FromLocation} to {rideRequest.ToLocation}...");
+
+            if (rideRequest == null) throw new ArgumentNullException(nameof(rideRequest));
+
+            var closestVechicle = _taxiRepository.VechicleClosestTo(rideRequest.FromLocation, AcceptableDistance);
             var ride = new Ride(rideRequest, closestVechicle);
+            
             Console.WriteLine($"Ride ordered, price: {ride.Price}");
             
             AcceptRide(ride);
@@ -27,29 +34,30 @@ namespace TaxiDispatcher.App
         
         public void PrintStatsForDriver(int driverId)
         {
-            Console.WriteLine($"Driver with ID = {driverId} earned today:");
-            var total = 0;
+            if (driverId <= 0) throw new ArgumentOutOfRangeException(nameof(driverId));
+
+            var totalEarnings = 0;
             foreach (var ride in _rideRepository.GetDriversRidingList(driverId))
             {
-                total += ride.Price;
-                Console.WriteLine("Price: " + ride.Price);
+                totalEarnings += ride.Price;
+                Console.WriteLine($"Price: {ride.Price}");
             }
-            Console.WriteLine("Total: " + total);
-        }
 
-        private Taxi ClosestVechicle(RideRequest rideRequest)
-        {
-            return _taxiRepository.ClosestToLocation(rideRequest.FromLocation, AcceptableDistance);
+            Console.WriteLine($"Driver with ID = {driverId} earned today:");
+            Console.WriteLine($"Total: {totalEarnings}");
         }
 
         private void AcceptRide(Ride ride)
         {
+            if (ride == null) throw new ArgumentNullException(nameof(ride));
+
             _rideRepository.SaveRide(ride);
 
             var acceptedTaxi = _taxiRepository.GetById(ride.Taxi.Id);
-            acceptedTaxi.Location = ride.ToLocation;
+            acceptedTaxi.Location = ride.RideRequest.ToLocation;
             
-            Console.WriteLine("Ride accepted, waiting for driver: " + ride.Taxi.Name);
+            Console.WriteLine($"Ride accepted, waiting for driver: {acceptedTaxi.Name}");
+            Console.WriteLine("");
         }
     }
 }

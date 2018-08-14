@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TaxiDispatcher.App
 {
-    public class TaxiRegister : ITaxiRepository
+    public class InMemoryTaxiRepository : ITaxiRepository
     {
         private static readonly IEnumerable<Taxi> Taxis = new[]
         {
@@ -14,20 +14,23 @@ namespace TaxiDispatcher.App
             new Taxi {Id = 4, Name = "Goran", TaxiCompany = TaxiCompanyRegister.Gold, Location = 7}
         };
 
-        public Taxi ClosestToLocation(int location, int acceptableDistance)
+        public Taxi VechicleClosestTo(int location, int acceptableDistance)
         {
-            var minimalDistance = Taxis.Min(taxi => Math.Abs(taxi.Location - location));
+            if (acceptableDistance <= 0) throw new ArgumentOutOfRangeException(nameof(acceptableDistance));
+
+            var minimalDistance = Taxis.Min(taxi => taxi.DistanceFrom(location));
             if (minimalDistance > acceptableDistance)
             {
-                throw new NoAvailableVehiclesException("There are no available taxi vehicles!");
+                throw new NoAvailableVehicleException();
             }
 
             return Taxis.First(taxi => taxi.DistanceFrom(location) == minimalDistance);
-
         }
 
         public Taxi GetById(int id)
         {
+            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            
             return Taxis.First(taxi => taxi.Id == id);
         }
     }

@@ -40,19 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Area.cs" />
-    <Compile Include="InMemoryRideDataBase.cs" />
-    <Compile Include="IRideRepository.cs" />
-    <Compile Include="ITaxiRepository.cs" />
-    <Compile Include="NoAvailableVehiclesException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ride.cs" />
-    <Compile Include="RideRequest.cs" />
+    <Compile Include="Ride\Area.cs" />
+    <Compile Include="Ride\InMemoryRideRepository.cs" />
+    <Compile Include="Ride\IRideRepository.cs" />
+    <Compile Include="Ride\Ride.cs" />
+    <Compile Include="Ride\RideRequest.cs" />
     <Compile Include="Scheduler.cs" />
-    <Compile Include="Taxi.cs" />
-    <Compile Include="TaxiCompany.cs" />
-    <Compile Include="TaxiCompanyRegister.cs" />
-    <Compile Include="TaxiRegister.cs" />
+    <Compile Include="Taxi\InMemoryTaxiRepository.cs" />
+    <Compile Include="Taxi\ITaxiRepository.cs" />
+    <Compile Include="Taxi\NoAvailableVehicleException.cs" />
+    <Compile Include="Taxi\Taxi.cs" />
+    <Compile Include="Taxi\TaxiCompany.cs" />
+    <Compile Include="Taxi\TaxiCompanyRegister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
