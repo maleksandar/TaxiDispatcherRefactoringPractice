@@ -21,9 +21,9 @@ namespace TaxiDispatcher.App
 
         public void OrderRide(RideRequest rideRequest)
         {
-            _log($"Ordering ride from {rideRequest.FromLocation} to {rideRequest.ToLocation}...");
-
             if (rideRequest == null) throw new ArgumentNullException(nameof(rideRequest));
+
+            _log($"Ordering ride from {rideRequest.FromLocation} to {rideRequest.ToLocation}...");
 
             var closestVechicle = _taxiRepository.VechicleClosestTo(rideRequest.FromLocation, AcceptableDistance);
             var ride = new Ride(rideRequest, closestVechicle);

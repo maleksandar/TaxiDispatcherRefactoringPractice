@@ -6,13 +6,12 @@ namespace TaxiDispatcher.App
 {
     public class InMemoryTaxiRepository : ITaxiRepository
     {
-        private static readonly IEnumerable<Taxi> Taxis = new[]
+        private IEnumerable<Taxi> Taxis { get; }
+
+        public InMemoryTaxiRepository(IEnumerable<Taxi> taxis)
         {
-            new Taxi {Id = 1, Name = "Predrag", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 1},
-            new Taxi {Id = 2, Name = "Nenad", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 4},
-            new Taxi {Id = 3, Name = "Dragan", TaxiCompany = TaxiCompanyRegister.Alfa, Location = 6},
-            new Taxi {Id = 4, Name = "Goran", TaxiCompany = TaxiCompanyRegister.Gold, Location = 7}
-        };
+            Taxis = taxis;
+        }
 
         public Taxi VechicleClosestTo(int location, int acceptableDistance)
         {

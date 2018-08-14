@@ -6,6 +6,14 @@ namespace TaxiDispatcher.Client
 {
     internal static class Program
     {
+        private static readonly IEnumerable<Taxi> Taxis = new[]
+        {
+            new Taxi {Id = 1, Name = "Predrag", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 1},
+            new Taxi {Id = 2, Name = "Nenad", TaxiCompany = TaxiCompanyRegister.Naxi, Location = 4},
+            new Taxi {Id = 3, Name = "Dragan", TaxiCompany = TaxiCompanyRegister.Alfa, Location = 6},
+            new Taxi {Id = 4, Name = "Goran", TaxiCompany = TaxiCompanyRegister.Gold, Location = 7}
+        };
+
         private static readonly IEnumerable<RideRequest> RideRequests = new[]
         {
             new RideRequest (5, 0, Area.City, new DateTime(2018, 1, 1, 23, 0, 0)),
@@ -16,7 +24,7 @@ namespace TaxiDispatcher.Client
 
         private static void Main()
         {
-            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository(), Console.WriteLine);
+            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository(Taxis), Console.WriteLine);
 
             foreach (var request in RideRequests)
             {
