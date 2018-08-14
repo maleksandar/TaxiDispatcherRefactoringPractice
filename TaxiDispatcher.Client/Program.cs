@@ -24,7 +24,7 @@ namespace TaxiDispatcher.Client
 
         private static void Main()
         {
-            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository(Taxis), Console.WriteLine);
+            var scheduler = new Scheduler(new InMemoryRideRepository(), new InMemoryTaxiRepository(Taxis), new Logger());
 
             foreach (var request in RideRequests)
             {

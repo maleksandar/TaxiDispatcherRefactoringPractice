@@ -8,27 +8,26 @@ namespace TaxiDispatcher.App
 
         private readonly IRideRepository _rideRepository;
         private readonly ITaxiRepository _taxiRepository;
+        private readonly ILogger _logger;
         public delegate void Logger(string message);
 
-        private readonly Logger _log;
-
-        public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, Logger loger)
+        public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, ILogger logger)
         {
             _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
             _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
-            _log = loger ?? throw new ArgumentNullException(nameof(loger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(_logger));
         }
 
         public void OrderRide(RideRequest rideRequest)
         {
             if (rideRequest == null) throw new ArgumentNullException(nameof(rideRequest));
 
-            _log($"Ordering ride from {rideRequest.FromLocation} to {rideRequest.ToLocation}...");
+            _logger.Log($"Ordering ride from {rideRequest.FromLocation} to {rideRequest.ToLocation}...");
 
             var closestVechicle = _taxiRepository.VechicleClosestTo(rideRequest.FromLocation, AcceptableDistance);
             var ride = new Ride(rideRequest, closestVechicle);
-            
-            _log($"Ride ordered, price: {ride.Price}");
+
+            _logger.Log($"Ride ordered, price: {ride.Price}");
             
             AcceptRide(ride);
         }
@@ -44,8 +43,8 @@ namespace TaxiDispatcher.App
                 Console.WriteLine($"Price: {ride.Price}");
             }
 
-            _log($"Driver with ID = {driverId} earned today:");
-            _log($"Total: {totalEarnings}");
+            _logger.Log($"Driver with ID = {driverId} earned today:");
+            _logger.Log($"Total: {totalEarnings}");
         }
 
         private void AcceptRide(Ride ride)
@@ -56,9 +55,9 @@ namespace TaxiDispatcher.App
 
             var acceptedTaxi = _taxiRepository.GetById(ride.Taxi.Id);
             acceptedTaxi.Location = ride.RideRequest.ToLocation;
-            
-            _log($"Ride accepted, waiting for driver: {acceptedTaxi.Name}");
-            _log("");
+
+            _logger.Log($"Ride accepted, waiting for driver: {acceptedTaxi.Name}");
+            _logger.Log("");
         }
     }
 }
