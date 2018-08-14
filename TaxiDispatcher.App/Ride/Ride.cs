@@ -24,14 +24,12 @@ namespace TaxiDispatcher.App
             get
             {
                 var basePrice = Taxi.TaxiCompany.Price * Math.Abs(RideRequest.FromLocation - RideRequest.ToLocation);
-
-                var timeOfDayBonus = TimeBonus;
-                return basePrice * AreaBonus * timeOfDayBonus;
+                return basePrice * CalculateAreaBonus * CalculateTimeBonus;
             }
         }
 
-        private int TimeBonus => (RideRequest.Time.Hour < 6 || RideRequest.Time.Hour > 22) ? NightTimeBonus : 1;
+        private int CalculateTimeBonus => (RideRequest.Time.Hour < 6 || RideRequest.Time.Hour > 22) ? NightTimeBonus : 1;
 
-        private int AreaBonus => RideRequest.Area == Area.InterCity ? InterCityBonus : 1;
+        private int CalculateAreaBonus => RideRequest.Area == Area.InterCity ? InterCityBonus : 1;
     }
 }
