@@ -25,24 +25,30 @@ namespace TaxiDispatcher.App.Tests
         [TestMethod]
         public void Price_DuringDay_And_InsideCityArea_ReturnsPriceWithNoBonus()
         {
+            // Arrange
             var ride = new Ride(new RideRequest(0, 10, Area.City, new DateTime(2012, 1, 1, 12, 0, 0)), taxi);
 
+            // Act & Assert
             Assert.AreEqual(Math.Abs(requestFrom - requestTo) * companyPrce, ride.Price);
         }
 
         [TestMethod]
         public void Price_DuringNight_And_InsideCityArea_ReturnsPriceWithNoBonus()
         {
+            // Arrange
             var ride = new Ride(new RideRequest(0, 10, Area.City, new DateTime(2012, 1, 1, 0, 0, 0)), taxi);
 
+            // Act & Assert
             Assert.AreEqual(Math.Abs(requestFrom - requestTo) * companyPrce * Ride.NightTimeBonus, ride.Price);
         }
 
         [TestMethod]
         public void Price_DuringNight_And_OutsideCityArea_ReturnsPriceWithNoBonus()
         {
+            // Arrange
             var ride = new Ride(new RideRequest(0, 10, Area.InterCity, new DateTime(2012, 1, 1, 0, 0, 0)), taxi);
 
+            // Act & Assert
             Assert.AreEqual(Math.Abs(requestFrom - requestTo) * companyPrce * Ride.NightTimeBonus * Ride.InterCityBonus, ride.Price);
         }
     }

@@ -4,7 +4,7 @@ namespace TaxiDispatcher.App
 {
     public class Scheduler
     {
-        private const int AcceptableDistance = 15;
+        public const int AcceptableDistance = 15;
 
         private readonly IRideRepository _rideRepository;
         private readonly ITaxiRepository _taxiRepository;
