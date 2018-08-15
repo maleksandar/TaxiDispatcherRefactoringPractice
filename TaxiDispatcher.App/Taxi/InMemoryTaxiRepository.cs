@@ -10,17 +10,18 @@ namespace TaxiDispatcher.App
 
         public InMemoryTaxiRepository(IEnumerable<Taxi> taxis)
         {
-            Taxis = taxis;
+            Taxis = taxis ?? throw new ArgumentNullException(nameof(taxis));
         }
 
         public Taxi VechicleClosestTo(int location, int acceptableDistance)
         {
             if (acceptableDistance <= 0) throw new ArgumentOutOfRangeException(nameof(acceptableDistance));
+            if (Taxis.Count() == 0) throw new NoAvailableVehicleException();
 
             var minimalDistance = Taxis.Min(taxi => taxi.DistanceFrom(location));
             if (minimalDistance > acceptableDistance)
             {
-                throw new NoAvailableVehicleException();
+                throw new NoAvailableVehicleException(acceptableDistance);
             }
 
             return Taxis.First(taxi => taxi.DistanceFrom(location) == minimalDistance);
@@ -30,7 +31,7 @@ namespace TaxiDispatcher.App
         {
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             
-            return Taxis.First(taxi => taxi.Id == id);
+            return Taxis.FirstOrDefault(t => t.Id == id) ?? throw new NonExistingVechicle(id);
         }
     }
 }

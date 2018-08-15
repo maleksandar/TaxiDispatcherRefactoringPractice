@@ -9,7 +9,6 @@ namespace TaxiDispatcher.App
         private readonly IRideRepository _rideRepository;
         private readonly ITaxiRepository _taxiRepository;
         private readonly ILogger _logger;
-        public delegate void Logger(string message);
 
         public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, ILogger logger)
         {
@@ -40,7 +39,7 @@ namespace TaxiDispatcher.App
             foreach (var ride in _rideRepository.GetDriversRidingList(driverId))
             {
                 totalEarnings += ride.Price;
-                Console.WriteLine($"Price: {ride.Price}");
+                _logger.Log($"Price: {ride.Price}");
             }
 
             _logger.Log($"Driver with ID = {driverId} earned today:");
