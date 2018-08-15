@@ -7,5 +7,7 @@ namespace TaxiDispatcher.App
         void SaveRide(Ride ride);
         
         IEnumerable<Ride> GetDriversRidingList(int driveriId);
+
+        int GetTotalEarningsForDriver(int driverId);
     }
 }

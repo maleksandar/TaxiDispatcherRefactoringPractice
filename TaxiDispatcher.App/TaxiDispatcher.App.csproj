@@ -52,7 +52,6 @@
     <Compile Include="Taxi\InMemoryTaxiRepository.cs" />
     <Compile Include="Taxi\ITaxiRepository.cs" />
     <Compile Include="Taxi\NoAvailableVehicleException.cs" />
-    <Compile Include="Taxi\NonExistingVechicle.cs" />
     <Compile Include="Taxi\Taxi.cs" />
     <Compile Include="Taxi\TaxiCompany.cs" />
     <Compile Include="Taxi\TaxiCompanyRegister.cs" />

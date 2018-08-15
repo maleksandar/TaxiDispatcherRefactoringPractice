@@ -21,5 +21,10 @@ namespace TaxiDispatcher.App
             
             return Rides.Where(ride => ride.Taxi.Id == driveriId);
         }
+
+        public int GetTotalEarningsForDriver(int driverId)
+        {
+            return GetDriversRidingList(driverId).Sum(ride => ride.Price);
+        }
     }
 }

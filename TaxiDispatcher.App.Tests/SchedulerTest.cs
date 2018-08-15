@@ -25,7 +25,6 @@ namespace TaxiDispatcher.App.Tests
             loggerMock = new Mock<ILogger>();
             loggerMock.Setup(logger => logger.Log(It.IsAny<string>())).Verifiable();
             taxi = new Taxi { Id = 1, Location = 0, Name = "Boban", TaxiCompany = new TaxiCompany { Price = 1 } };
-            taxiRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(taxi);
             scheduler = new Scheduler(rideRepositoryMock.Object, taxiRepositoryMock.Object, loggerMock.Object);
             requestFromLocation = 0;
             requestToLocation = 1;
@@ -83,7 +82,9 @@ namespace TaxiDispatcher.App.Tests
         {
             // Arange
             var rides = new[] { new Ride(rideRequest, taxi) };
-            rideRepositoryMock.Setup(x => x.GetDriversRidingList(It.IsAny<int>())).Returns(rides);
+            rideRepositoryMock.Setup(x => x.GetDriversRidingList(taxi.Id)).Returns(rides);
+            rideRepositoryMock.Setup(x => x.GetTotalEarningsForDriver(taxi.Id)).Returns(1);
+
             var scheduler = new Scheduler(rideRepositoryMock.Object, new InMemoryTaxiRepository(new List<Taxi>()), loggerMock.Object);
 
             // Act

@@ -16,5 +16,10 @@ namespace TaxiDispatcher.App
         {
             return Math.Abs(Location - location);
         }
+
+        public void DriveTo(int location)
+        {
+            Location = location;
+        }
     }
 }

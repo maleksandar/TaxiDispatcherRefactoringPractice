@@ -26,12 +26,5 @@ namespace TaxiDispatcher.App
 
             return Taxis.First(taxi => taxi.DistanceFrom(location) == minimalDistance);
         }
-
-        public Taxi GetById(int id)
-        {
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
-            
-            return Taxis.FirstOrDefault(t => t.Id == id) ?? throw new NonExistingVechicle(id);
-        }
     }
 }

@@ -4,17 +4,18 @@ namespace TaxiDispatcher.App
 {
     public class Scheduler
     {
-        public const int AcceptableDistance = 15;
+        public int AcceptableDistance { get; }
 
         private readonly IRideRepository _rideRepository;
         private readonly ITaxiRepository _taxiRepository;
         private readonly ILogger _logger;
 
-        public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, ILogger logger)
+        public Scheduler(IRideRepository rideRepository, ITaxiRepository taxiRepository, ILogger logger, int acceptableDistance = 15)
         {
             _rideRepository = rideRepository ?? throw new ArgumentNullException(nameof(rideRepository));
             _taxiRepository = taxiRepository ?? throw new ArgumentNullException(nameof(taxiRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(_logger));
+            AcceptableDistance = acceptableDistance;
         }
 
         public void OrderRide(RideRequest rideRequest)
@@ -35,12 +36,12 @@ namespace TaxiDispatcher.App
         {
             if (driverId <= 0) throw new ArgumentOutOfRangeException(nameof(driverId));
 
-            var totalEarnings = 0;
             foreach (var ride in _rideRepository.GetDriversRidingList(driverId))
             {
-                totalEarnings += ride.Price;
                 _logger.Log($"Price: {ride.Price}");
             }
+
+            var totalEarnings = _rideRepository.GetTotalEarningsForDriver(driverId);
 
             _logger.Log($"Driver with ID = {driverId} earned today:");
             _logger.Log($"Total: {totalEarnings}");
@@ -52,10 +53,9 @@ namespace TaxiDispatcher.App
 
             _rideRepository.SaveRide(ride);
 
-            var acceptedTaxi = _taxiRepository.GetById(ride.Taxi.Id);
-            acceptedTaxi.Location = ride.RideRequest.ToLocation;
+            ride.Taxi.DriveTo(ride.RideRequest.ToLocation);
 
-            _logger.Log($"Ride accepted, waiting for driver: {acceptedTaxi.Name}");
+            _logger.Log($"Ride accepted, waiting for driver: {ride.Taxi.Name}");
             _logger.Log("");
         }
     }
