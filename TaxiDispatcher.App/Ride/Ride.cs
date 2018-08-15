@@ -4,8 +4,8 @@ namespace TaxiDispatcher.App
 {
     public class Ride
     {
-        private const int InterCityBonus = 2;
-        private const int NightTimeBonus = 2;
+        public const int InterCityBonus = 2;
+        public const int NightTimeBonus = 2;
 
         public Ride(RideRequest rideRequest, Taxi taxi)
         {
